@@ -122,9 +122,6 @@
                  image: this.image,
                  description: this.description,
                 date: this.date,
-
-
-
              }
              this.$store.dispatch('createMeetup', meetUpData)
              this.$router.push('/event')

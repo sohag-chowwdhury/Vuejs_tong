@@ -150,6 +150,7 @@ export default {
         })
         fileReader.readAsDataURL(files[0])
         this.image = files[0]
+        console.log(this.image)
       },
       onCreateBlog () {
          if( !this.formValidation){

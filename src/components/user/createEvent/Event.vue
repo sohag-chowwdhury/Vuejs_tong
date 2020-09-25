@@ -121,8 +121,8 @@ import Loading from '../../loading/Loading'
     .title1 {
         position: absolute;
         bottom:95px;
-         right:70%;
-         left:5%;
+         right:50%;
+         left:70%;
         background-color: rgba(235, 113, 0, 0.938);
         color: aliceblue;
         padding: 5px;

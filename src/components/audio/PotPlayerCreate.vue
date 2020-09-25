@@ -3,7 +3,7 @@
       <v-form  @submit.prevent="onCreatPotPlay">
             <v-layout row wrap  justify-center>
               <v-flex xs12 md12 sm6 lg6 xl6 text-center>
-               <h4 class="red--text font-weight-bold">Create Your pot:</h4>
+               <h4 class="red--text font-weight-bold">Create Your pod:</h4>
           </v-flex>
         </v-layout>
         <v-layout row wrap >
@@ -78,8 +78,8 @@
         </v-layout>
         <v-layout>
           <v-flex xs12 md6 offset-sm3>        
-               <div> <v-file-input clear-icon="" accept=".mp3,audio/*"  v-on:change="onFilePickedAudio"
-               type="file" ref="file1"
+               <div> <v-file-input clear-icon="" accept=".mp3,audio/*"  @change="onFilePickedAudio"
+               type="file" ref="file"
                 
                 show-size counter  label="Pot Clip"></v-file-input></div>
           </v-flex>
@@ -165,14 +165,15 @@ export default {
             audience:'',
             topic:'',
             sub_title:'',
-            date: new Date(),
-           
+            file:'',
+            date: new Date(),         
             description:'',
              sub_sub_topics_value:'',
             audiences: ['Public','Member','Only me'],
             topics: ['Song','Poem', 'Nobel', 'Story', 'News'],
             sub_topics:[],        
             sub_sub_topics:[],
+
             customToolbar: [
                         ["bold", "italic", "underline"],
                         [{ list: "ordered" }, { list: "bullet" }],
@@ -190,8 +191,7 @@ export default {
        formValidation () {
              return this.title !== '' &&
               this.artist!== '' &&
-             this.imageUrl !== ''
-              && this.audioUrl!== '' &&
+             this.imageUrl !== '' &&
               this.audience !=='' &&
               this.topic !== '' &&
               this.sub_title !== '' &&
@@ -216,7 +216,7 @@ export default {
                  audience:this.audience,
                  description: this.description,
                  date: this.date,
-                sub_title:this.sub_title,
+                  sub_title:this.sub_title,
                  sub_sub_topics_value:this.sub_sub_topics_value,
                  artist:this.artist
 
@@ -229,23 +229,16 @@ export default {
          },
 
        onFilePickedAudio () {
-         
        let files = event.target.files
        console.log(files)
           let filename = files[0].name
-        console.log(filename)
         if (filename.lastIndexOf('.') <= 0) {
           return alert('Please add a valid file!')
         }
         const fileReader = new FileReader()
-        fileReader.addEventListener('load', () => {
-          this.audioUrl = fileReader.result
-          console.log("audio Url")
-            console.log(this.audioUrl)
-        })
         fileReader.readAsDataURL(files[0])
         this.audio = files[0]
-       
+       console.log(files[0].name)
         
       
       },

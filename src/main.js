@@ -7,13 +7,16 @@ import * as firebase  from 'firebase/app'
 import 'firebase/firestore'
 import Blog from './components/user/Blog';
 import Event from './components/user/createEvent/Event';
+import AlertCmp from './components/shared/Alert.vue';
 import DatetimePicker from 'vuetify-datetime-picker'
 import VueCountdownTimer from 'vuejs-countdown-timer'
+import Signup from './components/user/Auth/Signup'
 import DateFilter from './filters/date'
 import Aplayer from 'vue-aplayer'
 
 
 Vue.filter('date', DateFilter)
+Vue.component ('app-alert', AlertCmp)
 Vue.config.productionTip = false
 Vue.use(DatetimePicker)
 Vue.use(VueCountdownTimer)
@@ -23,6 +26,7 @@ Vue.use(VueCountdownTimer)
 Vue.component ('blog', Blog)
 Vue.component ('event', Event)
 Vue.component('aplayer', Aplayer)
+Vue.component ('signup', Signup)
 
 
 new Vue({
@@ -41,8 +45,14 @@ new Vue({
     appId: "1:707047787272:web:6d73f356436a2a3badbabd",
     measurementId: "G-YH8CGM7P2K"   
     })
-    this.$store.dispatch('lodeBlog')
-    this.$store.dispatch('lodePots')
+    firebase.auth().onAuthStateChanged((user)=>{
+      if(user) {
+        this.$store.dispatch('autoSignIn', user)
+        this.$store.dispatch('loadComments')
+        this.$store.dispatch('loadReplays')
+      }
+    })
+    
     this.$store.dispatch('loadMeetUps')
   }
 }).$mount('#app')
