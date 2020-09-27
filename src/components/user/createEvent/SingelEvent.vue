@@ -221,10 +221,11 @@
             </v-flex>
              <v-flex xs9 sm6 class="" lg6 md5 >
               <v-text-field
+              :maxlength="max"
               background-color="white lighten-2 "
                 class="rounded-lg white--text"
                  v-model="roomName"
-            label="Your discussion title about this post"
+            label="Your discussion title , maximum 35 character"
             value="Not more than three word"
             hint="For example, flowers or used cars"
           ></v-text-field> 
@@ -234,10 +235,10 @@
           <v-layout row wrap  justify-center class="my-2">
             <v-flex xs8 sm9 md9 lg9  class="my-2 mr-1 " >
              <v-textarea
-                label="Write details"
+                label="Write details....."
                 auto-grow
                 outlined
-                 v-model="description"
+                 v-model="descriptionChat"
                 class="rounded-lg"
                background-color="grey lighten-2"
                 rows="1"
@@ -261,100 +262,113 @@
         <v-btn small class="black white--text accent-4 mt-3">discussion room's</v-btn>
       </v-flex>
       <v-flex xs12 md12 lg12
-       v-for="item in loadComments" 
-                  :key="item.index">
+       v-for="(item,index) in loadComments" 
+                  :key="index">
          <v-card class="white rounded-br-xl my-1">
           
           <v-flex >
-              <v-layout row wrap  >
-                <v-flex xs2 md-2 lg2 xl2  class="my-1"
+              <v-layout row wrap justify-start >
+                <v-flex xs1 md-1 lg2 xl1   class="my-1"
                 >
-                    <v-avatar size="37"  color="black" class="ml-5 mt-1">
+                    <v-avatar size="33"  color="black" class="ml-15 mt-5">
                         <v-img :src="item.creatorImageUrl"></v-img>
                     </v-avatar>
-                    <v-btn x-small class="ml-2" color="green">{{item.status}}</v-btn>
+                   
                 </v-flex>
-                <v-flex xs9 md9 lg9 > 
-                  <p class="ml-0 green--text  rounded-xl mt-3"> {{item.creatorName}}</p>
-                   <h1></h1>
+                <v-flex xs10 md4 lg4 > 
+                  <v-card-text class="ml-0 green--text  rounded-xl mt-3"> {{item.creatorName}}
+                     <v-btn x-small class="ml-2" color="green">{{item.status}}</v-btn>                  
+                     <v-btn x-small fab color="error" class="ml-2" ><v-icon>mdi-delete</v-icon></v-btn>
+                     <v-btn x-small fab color="green" class="ml-2" ><v-icon color="white">mdi-account-edit</v-icon></v-btn>
+
+                  </v-card-text>
+                 
                 </v-flex>
-                 <v-flex xs11 md5 lg5 > 
-                  <p class="ml-7 deep-orange accent-2 black--text mx-3 px-4 rounded-lg mt-2"> {{item.chatRoomName}}</p>
+                 <v-flex xs12 md12 lg12 class="ml-15"> 
+                   <v-layout row wrap>
+                     <v-flex xs9 md10 lg6>
+                        <v-btn small block  color="grey  darken-4 rounded-lg white--text"> {{item.chatRoomName}}</v-btn>
+                     
+                     </v-flex>
+                     <v-felx xs3 md3 lg3>
+                        <v-btn small class=" ml-4 rounded-xl" @click="toggogle(item.unique)" color="green darken-2 ">
+                            reply <v-icon color="white">mdi-reply-circle</v-icon>
+                        </v-btn> 
+                         <v-btn small class=" ml-4  rounded-xl" v-if= "item.unique == uniqueId"  @click="toggogleoff(item.unique)" color="error accent-4  ">
+                             <v-icon color="white">mdi-close-circle-outline</v-icon>
+                        </v-btn> 
+                     </v-felx>
+                     </v-layout>                       
                 </v-flex>
               </v-layout>
               <v-flex xs12 md12 lg12>
-                  <p class=" lighten-5 px-2 rounded-lg mb-2 mx-2">
+                  <p class=" lighten-5 px-2 rounded-lg mb-2 my-2 py-2 mx-2">
                Lorem ipsum dolor sit amet consectetur adipisicing elit. Sequi cupiditate sint praesentium velit iste, officiis ratione molestiae nam minus quibusdam?
             </p>
               </v-flex>
-                         
+             
           </v-flex>
         </v-card>
-        <v-flex  v-for="replay in loadReplay" 
-                  :key="replay.index">
+        <v-flex>
+          <div   v-bind:class="{ hide: item.unique !== uniqueId}">
           <v-layout class="mt-2" row wrap justify-end>
-            <v-flex xs11 md11 lg11 >
-               <v-card class="mr-5 my-1 rounded-br-xl">
+            <v-flex xs11 md11 lg11  v-for="replay in loadReplay" 
+                  :key="replay.index">
+               <v-card v-if="item.unique == replay.unique" class="mr-5 my-1 rounded-br-xl">
                  <v-flex xs12 md12 lg12 >
-                   <v-layout row justify-center>
-                     <v-flex xs2 md2 lg2 >
-                        <v-avatar class="ml-5" size="37" color="black">
+                   <v-layout row class="mt-2">
+                     <v-flex xs1 md1 lg1 class="mt-1" >
+                        <v-avatar class="ml-5" size="32" color="black">
                             <v-img :src="replay.creatorImageUrl"></v-img>
                         </v-avatar>
                      </v-flex>
-                     <v-flex>
+                     <v-flex xs6 lg2 md2 class="mt-1">
                         <p class="green--text">{{replay.creatorName}}</p>
+                     </v-flex>
+                     <v-flex xs2 lg2 md2 class="mt-1">
+                        <v-btn x-small fab color="error" class="ml-2" ><v-icon>mdi-delete</v-icon></v-btn>
+                     <v-btn x-small fab color="green" class="ml-2" ><v-icon color="white">mdi-account-edit</v-icon></v-btn>
                      </v-flex>
                    </v-layout>
                    <v-flex >
-                     <p class="mx-3"> Lorem ipsum dolor sit amet consectetur adipisicing elit. Quam commodi, mollitia exercitationem vero aliquam doloresa recusandae? </p>
+                     <p class="mx-3">{{replay.description}} </p>
                    </v-flex>
                     <v-layout row wrap>
                     <v-flex xs8 8 lg8></v-flex>
-                    <v-flex xs3 md3 lg3>
-                      <v-btn small class="my-2 ml-4 rounded-xl" @click="filter = !filter" color="green darken-2 ">
-                            reply <v-icon color="white">mdi-reply-circle</v-icon>
-                      </v-btn>
-                     
-                    </v-flex>
+                    <v-flex xs3 md3 lg3>                  
+                      </v-flex>
                       <v-flex xs11 md11 lg11  >
-                <div >
-                 
-           </div>
-             </v-flex>
+                
+                   </v-flex>
                   </v-layout>                   
                  </v-flex>
                </v-card>
-            </v-flex>
-           
-           
-           
+            </v-flex>         
           </v-layout>
-          <v-layout row wrap justify-end>
-            <v-flex xs11 md11 lg11>
-                <v-form  @submit.prevent="onCreateReply(item.unique)">
+          </div>
+           <div  v-bind:class="{ hide: item.unique !== uniqueId}">
+             <v-form  @submit.prevent="onCreateReply(item.unique, index)">
                  <v-layout row wrap   justify-end class="">
-            <v-flex x10  sm9 md10 lg9  class="mt-5" >
-             <v-textarea
-                label="reply here"
-                auto-grow
-                outlined
-                 v-model=" replay[index].description"
-                class="rounded-lg"
-               background-color="grey lighten-2"
-                rows="1"
-                row-height="25"
-                ></v-textarea>    
+                  
+            <v-flex x10  sm9 md10 lg9 class="mt-2" >             
+            <v-text-field
+            label="Write Your replay"
+            background-color="white"
+             v-model="description[index]" type="text"
+            outlined
+          ></v-text-field>
+         
             </v-flex>
-              <v-flex xs2 sm2 md2 lg2 >
-                        <v-btn class=" rounded-r-lg  py-6  " :disabled="!formValidationReply" type="submit"
+          
+              <v-flex xs2 sm2 md2 lg2 class="mt-2" >
+              
+                        <v-btn class=" rounded-r-lg  py-7  "  type="submit"
                   color="white">post</v-btn>
                  </v-flex>
         
            </v-layout>
            </v-form>
-            </v-flex>
-          </v-layout>
+          </div>
         </v-flex>
       </v-flex>
        
@@ -380,9 +394,12 @@
         name: 'Timer',
        data(){
          return {
+           max:35,
+          uniqueId:'',
           filter:true,
+          descriptionChat:'',
           roomName:'',
-          description:'',
+         description:[],
          items: [
         { title: 'Shar', icon:'mdi-share-variant-outline'},
         { title: 'Report', icon:'mdi-block-helper'},
@@ -394,13 +411,20 @@
       
      props: ['id'],
     methods:{
+        toggogle( item ){
+            this.uniqueId = item
+          },
+           toggogleoff(  ){
+            this.uniqueId = ''
+          },
         onCreateComments () {
+          
              if( !this.formValidation){
                  return
              }           
              const comment = {
                  chatRoomName: this.roomName,
-                 description: this.description,
+                 description: this.descriptionChat,
                 creatorImageUrl: this.$store.getters.user.photoUrl,
                 creatorName: this.$store.getters.user.name,
                 commentsId: this.id
@@ -408,10 +432,11 @@
 
              }
              this.$store.dispatch('createComment', comment)
+           
          },
-           onCreateReply (event) {           
+           onCreateReply (event,index) {           
              const reply = {
-                 description: this.description,
+                 description: this.description[index],
                 commentsId: this.id,
                 creatorImageUrl: this.$store.getters.user.photoUrl,
                 creatorName: this.$store.getters.user.name,
@@ -419,6 +444,7 @@
                 unique: event
              }
              this.$store.dispatch('createReply', reply)
+            this.description.length = 0
          }, 
           startCallBack: function (x) {
         console.log(x)
@@ -431,10 +457,10 @@
    
      computed: {
           formValidation(){
-        return this.description !== '' && this.roomName !== '' 
+        return this.descriptionChat !== '' && this.roomName !== '' 
       },
-      formValidationReply(){
-        return this.description !== ''  
+        formValidationReplay(){
+        return this.description !== ''
       },
        loadReplay () {
              console.log("I am obkkkeyd")
@@ -473,7 +499,7 @@
 
 </script>
 <style scoped>
-  div.divfilter{
+  div.hide{
     display: none;
   }
 </style>

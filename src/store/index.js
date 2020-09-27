@@ -506,7 +506,7 @@ loadComments (state) {
 },
 loadReplays (state) {
   return state.loadReplays.sort((replayA, replayB) =>{
-    return new Date(replayB.date ) - new Date(replayA.date);
+    return new Date(replayA.date ) - new Date(replayB.date);
 
   })
 },
