@@ -21,6 +21,7 @@
     "vue-quill": "^1.5.1",
     "vue-quill-editor": "^3.0.6",
     "vue-router": "^3.2.0",
+    "vue-social-sharing": "^3.0.0",
     "vue-spinner": "^1.0.4",
     "vue-spinners": "^1.0.2",
     "vue2-editor": "^2.10.2",

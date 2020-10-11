@@ -4,11 +4,18 @@
     <v-toolbar dark flat class="orange darken-4 ">
          <v-app-bar-nav-icon @click.native.stop="drawer = true" class="d-sm-none"></v-app-bar-nav-icon>
          <v-toolbar-title >
-            <router-link to="/" tag="span" style="cursor: pointer">Meet-Up</router-link>
+            <router-link to="/" tag="span" style="cursor: pointer">Tong Adda</router-link>
           </v-toolbar-title>
+          <v-toolbar-title >
+            <notification  @click="timeSet" class="mx-5"></notification>
+          </v-toolbar-title>
+          
          <v-spacer></v-spacer>
+          <v-toolbar-items>
+            
+          </v-toolbar-items>
            <v-toolbar-items  class="mx-6" v-if="userAuth">
-          <v-btn text  v-for="item in navItems" 
+          <v-btn text small v-for="item in navItems" 
           :key="item.title" 
           router
           :to="item.link"
@@ -19,22 +26,26 @@
           </v-toolbar-items>
           <v-toolbar-items   class="hidden-xs-only" v-if="userAuth">
             <v-flex>
-              <v-layout row wrap>
-                <v-flex md12 lg12 class="mt-2 ml-7">
-                  <v-avatar size="35">
+              <v-layout row wrap class="mr-5">
+              <v-toolbar-items >
+                <router-link to="/profile" tag="span" style="cursor: pointer">
+                 <v-flex md12 lg12 class="mt-2 ml-7">
+                  <v-avatar size="25">
                     <v-img :src="userAuth.photoUrl"></v-img>
                   </v-avatar>
                 </v-flex>
                 <v-flex md12 lg12 v-if="userAuth.name">
-                    <p style="font-size:0.8em;" class=""> {{userAuth.name}}</p>
+                    <p style="font-size:0.7em;" class=""> {{userAuth.name}}</p>
                 </v-flex>
+                </router-link>
+              </v-toolbar-items>
               </v-layout>
            </v-flex>
            
           </v-toolbar-items>
            
            <v-toolbar-items>
-          <v-btn text  
+          <v-btn text small 
           class=" error hidden-xs-only" @click="logOut" v-if="userAuth">
              <v-icon left>mdi-logout</v-icon> Logout
           </v-btn>
@@ -42,7 +53,7 @@
            <v-toolbar-items>
           <v-btn text  
           class="hidden-xs-only" large v-if="!userAuth">
-            <signup left></signup>
+            <signin left></signin>
           </v-btn>
           </v-toolbar-items>
            <v-toolbar-items>
@@ -104,11 +115,13 @@
    export default {
     data: () => ({
       drawer: false,
+      time:new Date().toISOString(),
       navItems : [
+          {icon: 'mdi-cards-heart', title:'favroute', link: "/favourite"},  
           {icon: 'mdi-headphones', title:'Podcaster', link: "/potplayer"},
         {icon: ' mdi-blogger', title:'Blog', link: "/blog"},
           {icon: 'mdi-briefcase-search', title:'Event', link: "/event"},
-       
+         
         ]
     }),
     computed: {
@@ -120,6 +133,8 @@
        error () {
              return this.$store.getters.error
          },
+
+         
     
 },
     methods: {
@@ -130,7 +145,14 @@
         onDismissed () {
              console.log('Dismissed alert')
              this.$store.dispatch('clearError')
-         }
+         },
+
+           timeSet(){
+                     const time = {                    
+                         time: this.time
+                         }
+                           this.$store.dispatch('timeSetNot', time)                              
+                }
     }
   }
 </script>

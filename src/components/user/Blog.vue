@@ -1,24 +1,26 @@
 <template>
 <div class="black">
-  <v-container>
 
-      <v-layout row wrap  justify-center>
+      <v-layout row wrap class="mx-2"  justify-center>
              <v-flex xs12 md12 lg12>
                   <v-layout row wrap justify-center
                   style="border-bottom: ridge; border-width: 3px; border-color:error;">
-                    <v-flex xs0 md3 lg2></v-flex>
-                  <v-flex xs12 md6 lg3  justify-center >
-                      <v-flex xs12 md6 lg12  class=" mx-5 my-1" ><v-btn  class="mx-3" fab color="black"  ><v-icon color="green">mdi-blog</v-icon></v-btn>
+                    <v-flex xs0 md0 lg2></v-flex>
+                  <v-flex xs12 md6 lg5  justify-center >
+                      <v-flex xs12 md12 lg12  class=" mx-5 my-1" >
+                      
+                        <v-btn small  class="mx-5" color="green" fab dark   > <v-icon color="black">mdi-blogger</v-icon></v-btn>
       
-               <v-btn   class="mx-5" color="black" fab dark @click="filter = !filter"   > <v-icon dark>mdi-filter-outline</v-icon></v-btn>
+               <v-btn  small  class="mx-5" color="white" fab dark @click="filter = !filter"   > <v-icon color="black">mdi-filter-outline</v-icon></v-btn>
      
-      <v-btn class="ma-2 mx-5 white--text" v-if="userAuth"  color="black" to="/blog/new"><v-icon color="green" class="mx-2 my2">mdi-typewriter</v-icon>Write a blog</v-btn>   </v-flex>
+      <v-btn small class="ma-2 mx-5 black--text" v-if="userAuth"  color="white" to="/blog/new"><v-icon color="green" class="mx-2 my2">mdi-typewriter</v-icon>Write a blog</v-btn>   </v-flex>
                   </v-flex>
-                  <v-flex xs12 md3 lg4  class="mx-2 mt-1">
+                  <v-flex xs12 md5 lg4  class="mx-2 mt-1">
                    <div  v-bind:class="{ divfilter: filter}">
                        <v-text-field
                      class="mx-2 rounded-xl"
                     label="Search with title"  
+                    v-model="search"
                     background-color="grey lighten-2"
                     single-line
                     outlined
@@ -31,10 +33,10 @@
              <div  v-bind:class="{ divfilter: filter}">
                 <v-layout row wrap  justify-center >
                 <v-flex style=" border-bottom: double; border-color:black" justify-center xs12 sm12 md12 lg12 class="m-auto">          
-                 <span v-for="item in subject" 
-                  :key="item.title"  justify-center>
-                      <v-btn  small color="grey lighten-2 rounded-xl" @click="onChange(item.title)"  class="mx-2 my-2">
-                        {{item.title}}
+                 <span v-for=" item in subjects" 
+                  :key="item"  justify-center>
+                      <v-btn  small color="grey lighten-2 rounded-xl" @click="buttonFilter(item)"  class="mx-2 my-2">
+                        {{item}}
                       </v-btn>
                     </span>        
               </v-flex>
@@ -42,18 +44,19 @@
              </div>
           </v-flex>
       <br style="border-bottom: ridge; border-width: 6px; border-color:error;">
-          <v-flex  xs12 sm6 md3  justify-center
+          <v-flex  xs12 sm4 md4 lg3  justify-center
             v-for="item in blogItem"
            :key="item.id"
             >  
                      <v-card
                style=" widthsize border: outset; border-width:1px;  border-color:black"
-             class="mobilewidth mx-2 my-2 rounded-xl"
+             class="mobilewidth mx-2 my-1 rounded-xl"
             height="275"  
             v-if="item.type =='Blog'"
+             @click="blogLoadItem(item.id)"
             >
             <v-img
-                 class="white--text align-end mx-1 my-2"
+                 class="white--text align-end mx-1 my-0"
                   height="190"     
                   :src= "item.imageUrl"
                outlined color="black"
@@ -70,7 +73,7 @@
             </div>
     </v-img>
     
-    <v-layout  row wrap class="amber mx-1 rounded-lg darken-2">
+    <v-layout  row wrap class="amber mx-1  rounded-b-xl darken-2">
       <v-flex xs12 md12 lg12 >
            <div class="topbar1">   
            <h4 class=" tolbar1 ml-7 black--text"> {{item.title}}</h4>     
@@ -79,18 +82,19 @@
       <v-flex xs12 md12 lg12 class="mt-0">
            <v-layout class="lighten-1" row wrap>
         <v-flex  xs1 md1 lg1>
-             <v-avatar class="ml-6 mt-1" color="teal" size="37">
-      <span class="white--text headline">48</span>
+             <v-avatar class="ml-6 my-3 mt-1" color="teal" size="37">
+              <v-img :src="item.creatorImage"></v-img>
     </v-avatar>
         </v-flex>
-        <v-flex  xs8 md9 lg8 >
+        <v-flex class="my-1"  xs7 md7 lg8 >
             <v-flex class="ml-6" xs11 md11 lg11>
-              <p class="example my-0" >Kasem Chowdhury</p>
-             <p class="exampledate my-0">{{item.time | date}}</p>
+              <p style="font-size:.9em !important" class="example ml-2 my-0" >{{item.creatorName}}</p>
+             <p   style="font-size:.8em !important"  class="exampledate ml-2  my-0">{{item.time | date}}</p>
             </v-flex>
         </v-flex>
-        <v-flex xs2 md2 lg3 >
-          <v-btn x-small fab class="mt-1" black><v-icon>mdi-share-variant-outline</v-icon></v-btn>
+        <v-flex xs1 md1 lg1 class="my-1"> <share></share></v-flex>
+        <v-flex xs2 md2 lg1 >
+        
            <v-menu
             class=""
             v-if="userAuth" 
@@ -113,14 +117,14 @@
         </v-btn>
       </template>
 
-      <v-list class="white--text">
-        <v-list-item
-          v-for="(item, i) in items"
-          :key="i"
-          class="black accent-3"
-        >
-          <v-btn x-small  text class="white--text"><v-icon class=" mr-3" small>{{item.icon}}</v-icon>{{ item.title }}</v-btn>
-        </v-list-item>
+     
+      <v-list class="black accent-3 white--text">
+       
+         <v-btn x-small @click="saveBlog(item)" text class=" my-2 ml-1 white--text"><v-icon class="mr-3 my-1" >mdi-cards-heart</v-icon>Save</v-btn>
+         <br>
+          <v-btn x-small to="/report" text class=" my-2 ml-1 white--text"><v-icon class="mr-3 my-1" small>mdi-block-helper</v-icon>Report</v-btn>
+         <edit-meetup class="my-1" :meetup="item"></edit-meetup>
+          <delete-meetup :meetup="item"></delete-meetup>
       </v-list>
     </v-menu>
         </v-flex>       
@@ -132,7 +136,6 @@
       
         </v-layout>
         
-  </v-container>
  </div> 
 </template>
 <script>
@@ -144,34 +147,27 @@ export default {
             fab: true,
           filter:true,
           show: false,
+          search:'',
+          buttonSearch:'',
           show1:false,
            offsetTop: 0,
           potItemMethods:'',
-          items: [
-        { title: 'Share', icon:'mdi-share-variant-outline'},
-        { title: 'Report', icon:'mdi-block-helper'},
-        { title: 'Edit', icon:'mdi-square-edit-outline'},
-        { title: 'Delete', icon:'mdi-delete' },
-      ],
+        
           sub_subject:[],
-          subject:[
-             {title:'Bangladesh'},
-        {title:'Intenational'},
-        {title:'Sports' },
-         { title:'Opinion'},
-        {title:'Job'},
-         {title:'Lifestyle'},
-         {title:'Education'},
-         {title:'Literature'},
-          {title:'Others'},
-        ]
+           subjects: ['Bangladesh', 'Intenational', 'Sports', 'Politics', 'Opinion', 'Job', 'Lifestyle', 'Entertainment' ,'Education'],
         
         }
       },
     computed: {
         blogItem () {
-          console.log(this.$store.getters.lodeMeetUps.filter((meetup)=> { return meetup.type == "Blog"}))
-            return this.$store.getters.lodeMeetUps.filter((meetup)=> { return meetup.type == "Blog"})
+        
+            return this.$store.getters.lodeMeetUps.filter((meetup)=> { 
+                if( this.search != '' ){  return meetup.title.toLowerCase().match(this.search.toLowerCase()) &&  meetup.type =="Blog"}
+               if( this.buttonSearch != ''){ return  meetup.subject == this.buttonSearch &&  meetup.type =="Blog"}
+                 else { return meetup.title.toLowerCase().match(this.search.toLowerCase()) &&  meetup.type =="Blog"}
+
+            }
+           )
         },
         loading () {
              return this.$store.getters.loading
@@ -183,7 +179,19 @@ export default {
        },   
     },
     methods: { 
-      
+       buttonFilter(e){
+          this.search = ''
+          console.log(e)
+          this.buttonSearch = e
+        },
+         saveBlog(e){
+                        console.log(e)      
+                 const saveFav = e 
+                 console.log("ok")
+                 console.log(saveFav)
+                   this.$store.dispatch('saveBlog', saveFav)
+              
+      },
       blogLoadItem (id) {
         this.$router.push('/blog/' +id)
     },
@@ -230,6 +238,10 @@ export default {
 }
 </script>
 <style  scoped>
+.first {
+    width: 150px !important;
+    height: 350px !important
+  }
 .title {
         position: absolute;
         bottom:150px;

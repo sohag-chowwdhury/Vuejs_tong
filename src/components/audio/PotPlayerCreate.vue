@@ -46,7 +46,7 @@
                      <v-flex v-if="sub_sub_topics"  xs12 sm12 md12 lg12 class="m-auto">          
                     <span  v-for="item in sub_sub_topics" 
                      :key="item.title"  justify-center>
-                      <v-btn v-if="sub_sub_topics" @click="set_sub_sub_topics_value(item.title)" outlined color="orange" x-small  class="mx-2 my-2">
+                      <v-btn v-if="sub_sub_topics" @click="set_sub_sub_topics_value(item.title)" outlined color="grey darken-2" small  class="mx-2 my-2">
                         {{item.title}}
                       </v-btn>
                     </span>        
@@ -57,16 +57,16 @@
                         <p class="mx-2 text-center font-weight-bold" > Selected Catagory:</p>
                         <v-layout row wrap justify-center>
                             <v-flex xs4 md4 lg4 sm4 xl4>
-                                <v-btn  small v-if="this.topic" class="green mb-2">{{this.topic}}</v-btn>
-                                <v-btn v-if="this.sub_title" small class="red mb-2 mx-1">{{this.sub_title}} </v-btn>
-                                <v-btn v-if="this.sub_sub_topics_value" dark small class="indigo mb-2 mx-1">
+                                <v-btn  small v-if="this.topic" class="grey darken2 rounded-xl mb-2">{{this.topic}}</v-btn>
+                                <v-btn v-if="this.sub_title" small class="grey darken rounded-xl 2 mb-2 mx-1">{{this.sub_title}} </v-btn>
+                                <v-btn v-if="this.sub_sub_topics_value"  small class="grey darken-1 rounded-xl  mb-2 mx-1">
                                     {{this.sub_sub_topics_value}} </v-btn>
                             </v-flex>
                             <v-flex xs1 md1 lg1 sm1 xl1>
                                     <p v-if="this.topic">||</p>
                             </v-flex>
                             <v-flex xs3 md3 lg3 sm3 xl3>
-                                <v-btn v-if="this.audience" small class="info mb-2 mx-1">{{this.audience}} </v-btn>
+                                <v-btn v-if="this.audience" small class="info rounded-xl mb-2 mx-1">{{this.audience}} </v-btn>
                             </v-flex>
                         </v-layout>
                     </v-flex>    

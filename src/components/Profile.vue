@@ -1,8 +1,59 @@
-<template >
-<div class="black darken-4">
-   
-
-     <v-layout row  justify-center>
+<template>
+<div class="black">
+  <v-layout row wrap justify-center  style=" border-bottom:outset; border-color:grey " class="my-1">
+  <v-container  class="my-1">
+            <v-layout row wrap justify-center>
+                <v-flex xs12 md6 lg7>
+            <v-layout row wrap justify-center  class="mt-2">
+                <v-flex xs12 md12 lg12>
+                    <v-layout row wrap justify-center>
+                        <v-flex xs2 md2 lg2 >
+                            <v-avatar size="60">
+                                <v-img :src="userAuth.photoUrl"></v-img>
+                            </v-avatar>
+                        </v-flex> 
+                         <v-flex xs6 md4 lg3 class="mt-4">
+                            <h3 class="green--text">{{userAuth.name}}</h3>
+                        </v-flex>                    
+                    </v-layout>                   
+                </v-flex>
+                
+                <v-flex xs12 md12 lg12 class="mt-5">
+                    <v-layout row wrap justify-center  class=" my-2">
+                        <v-flex xs12 md12 lg12>
+                            <v-card  class="grey darken-4">
+                                <v-layout row wrap justify-center >
+                                    <v-flex xs7 md4 lg3 class="my-1 ">
+                                        <v-btn small to="/potplayer/new" class="ml-4">  <v-icon color="green" >
+                                                mdi-headphones
+                                            </v-icon>Create Pod</v-btn>                                      
+                                    </v-flex >
+                                    <v-flex xs7 md4 lg3 class="my-1">
+                                        <v-btn small to="blog/new">
+                                          <v-icon color="orange" >
+                                              mdi-blogger
+                                            </v-icon> Create Blog
+                                            </v-btn>
+                                    </v-flex >
+                                    <v-flex xs7 md4 lg3 class="my-1">
+                                        <v-btn small to="event/new">
+                                        <v-icon color="error">
+                                             mdi-briefcase-search
+                                            </v-icon>
+                                            create Event
+                                        </v-btn>
+                                    </v-flex>
+                                </v-layout>
+                            </v-card>
+                        </v-flex>
+                    </v-layout>
+                </v-flex>
+            </v-layout>
+        </v-flex>
+            </v-layout>
+          </v-container>
+  </v-layout>
+ <v-layout row  justify-center>
      <v-btn
             v-show="fab"
             fab
@@ -16,62 +67,7 @@
             @click="toTop"
           ><v-icon>mdi-arrow-up-bold</v-icon>
          </v-btn>
-            <v-flex xs12 md12 lg12 class="mx-3">
-                <v-layout style=" border-bottom:outset; border-color:white" class="my-1" row wrap>
-                    <v-flex xs4 lg4>
-                    </v-flex>
-                    <v-flex  class="mx-auto my-1" xs4 md4 lg4>
-                        <v-layout row wrap>
-                            <v-flex xs4 md4 lg4>
-                                <v-layout wro wrap>
-                                    <v-flex xs12 lg12>
-                                        <v-btn to="/potplayer" fab color="white" small>
-                                            <v-icon color="green">
-                                                mdi-headphones
-                                            </v-icon>
-                                        </v-btn>
-                                    </v-flex>
-                                    <v-flex xs12 lg 12>
-                                        <v-flex xs12 lg 12>
-                                            <v-btn color="green accent-4" class="white--text" x-small>pod</v-btn>
-                                    </v-flex>
-                                    </v-flex>
-                                </v-layout>
-                            </v-flex> 
-                            <v-flex xs4 md4 lg4>
-                                  <v-layout row wrap>
-                                    <v-flex xs12 lg12>
-                                        <v-btn to="/blog" class="ml-2" fab color="white" small>
-                                            <v-icon color="orange">
-                                              mdi-blogger
-                                            </v-icon>
-                                        </v-btn>
-                                    </v-flex>
-                                    <v-flex xs12 lg 12>
-                                        <v-btn  color="white" class="black--text ml-1" x-small>blog</v-btn>
-                                    </v-flex>
-                                </v-layout>
-                            </v-flex> 
-                            <v-flex xs4 md4 lg4>
-                                  <v-layout row wrap >
-                                    <v-flex xs12 lg12>
-                                        <v-btn to="/event" fab color="white  accent-2" small>
-                                            <v-icon color="error">
-                                             mdi-briefcase-search
-                                            </v-icon>
-                                        </v-btn>
-                                    </v-flex>
-                                    <v-flex xs12 lg 12>
-                                            <v-btn color="error accent-2" class="black--text" x-small>job</v-btn>
-                                    </v-flex>
-                                </v-layout>
-                            </v-flex>                     
-                        </v-layout>
-                    </v-flex>
-                    <v-flex xs0 lg4>
-                    </v-flex>
-                </v-layout>
-            </v-flex>
+          
           
             <v-flex xs12 md12 lg12 > 
          <v-layout row wrap justify-center class="mx-3">           
@@ -202,13 +198,10 @@
         </v-btn>
       </template>
 
-        <v-list class="black accent-3 white--text">
+        <v-list class="black accent-3 ml-3 white--text">
        
-         <v-btn x-small @click="saveJob(item)" text class=" my-2 ml-1 white--text"><v-icon class="mr-3 my-1" >mdi-cards-heart</v-icon>Save</v-btn>
-         <br>
-          <v-btn x-small to="/report" text class=" my-2 ml-1 white--text"><v-icon class="mr-3 my-1" small>mdi-block-helper</v-icon>Report</v-btn>
-         <edit-meetup class="my-1" :meetup="item"></edit-meetup>
-          <delete-meetup :meetup="item"></delete-meetup>
+         <edit-meetup class="  my-1" :meetup="item"></edit-meetup>
+          <delete-meetup class="mx-1" :meetup="item"></delete-meetup>
       </v-list>
     </v-menu>
         </v-flex>       
@@ -230,7 +223,7 @@
         
         border-radius: 5px;
         opacity: .85;">
-           <v-btn  fab color="green" x-small>
+           <v-btn  fab color="green "  x-small>
                 <v-icon color="white">
                     mdi-headphones
                 </v-icon>
@@ -304,13 +297,10 @@
         </v-btn>
       </template>
 
-     <v-list class="black accent-3 white--text">
+    <v-list class="black accent-3 ml-3 white--text">
        
-         <v-btn x-small @click="savePot(item)" text class=" my-2 ml-1 white--text"><v-icon class="mr-3 my-1" >mdi-cards-heart</v-icon>Save</v-btn>
-         <br>
-          <v-btn x-small to="/report" text class=" my-2 ml-1 white--text"><v-icon class="mr-3 my-1" small>mdi-block-helper</v-icon>Report</v-btn>
-         <edit-meetup class="my-1" :meetup="item"></edit-meetup>
-          <delete-meetup :meetup="item"></delete-meetup>
+         <edit-meetup class="  my-1" :meetup="item"></edit-meetup>
+          <delete-meetup class="mx-1" :meetup="item"></delete-meetup>
       </v-list>
     </v-menu>
         </v-flex>       
@@ -334,7 +324,7 @@
              >
          
                     <div  class="title mt-5 ">
-                           <v-btn class="ml-2" fab color="black" x-small>
+                           <v-btn class="mr-2" fab color="black" x-small>
                                 <v-icon color="orange">
                                     mdi-blogger
                                 </v-icon>
@@ -388,13 +378,10 @@
         </v-btn>
       </template>
 
-      <v-list class="black accent-3 white--text">
+      <v-list class="black accent-3 ml-3 white--text">
        
-         <v-btn x-small @click="saveBlog(item)" text class=" my-2 ml-1 white--text"><v-icon class="mr-3 my-1" >mdi-cards-heart</v-icon>Save</v-btn>
-         <br>
-          <v-btn x-small to="/report" text class=" my-2 ml-1 white--text"><v-icon class="mr-3 my-1" small>mdi-block-helper</v-icon>Report</v-btn>
-         <edit-meetup class="my-1" :meetup="item"></edit-meetup>
-          <delete-meetup :meetup="item"></delete-meetup>
+         <edit-meetup class="  my-1" :meetup="item"></edit-meetup>
+          <delete-meetup class="mx-1" :meetup="item"></delete-meetup>
       </v-list>
     </v-menu>
         </v-flex>       
@@ -406,7 +393,7 @@
       </v-layout>
       </v-flex>
      </v-layout>
- </div>
+  </div>
 </template>
 <script>
 export default{
@@ -420,65 +407,33 @@ export default{
           show1:false,
            offsetTop: 0,
           potItemMethods:'',
-       
-
+         
         
         }
     },
     props:['id'],
-    
-
-
-    methods:  { 
-      //data save 
-      savePot(e){
-                    
-                 console.log(e)      
-                 const saveFav = e 
-                 console.log("ok")
-                 console.log(saveFav)
-                   this.$store.dispatch('savePot', saveFav)
-      },
-       saveBlog(e){
-                        console.log(e)      
-                 const saveFav = e 
-                 console.log("ok")
-                 console.log(saveFav)
-                   this.$store.dispatch('saveBlog', saveFav)
-              
-      },
-             saveJob(e){                             
-                 console.log(e)      
-                 const saveFav = e 
-                 console.log("ok")
-                 console.log(saveFav)
-                   this.$store.dispatch('saveJob', saveFav)
-      },
-        toTop (e) {
-       if (typeof window === 'undefined') return
-      const top = window.pageYOffset ||   e.target.scrollTop || 0
-      this.fab = top > 20
-      this.$vuetify.goTo(0)
-    },
-      blogLoadItem (id) {
+    methods:  { blogLoadItem (id) {
         this.$router.push('/blog/' +id) },
-
         jobLoadItem (id) {
         this.$router.push('/event/' +id) },
-
         potLoadItem (id) {
         this.$router.push('/pot/' +id) },
-
-        startCallBack: function (x) {
+          startCallBack: function (x) {
         console.log(x)
       },
       endCallBack: function (x) {
         console.log(x)
       },
+       toTop (e) {
+       if (typeof window === 'undefined') return
+      const top = window.pageYOffset ||   e.target.scrollTop || 0
+      this.fab = top > 20
+      this.$vuetify.goTo(0)
+    },
     },
     computed:{
         allItem(){
-              return this.$store.getters.lodeMeetUps
+              return this.$store.getters.lodeMeetUps.filter((item)=>{ return    item.creatorId ==this.$store.getters.user.id  })
         },
 
           userAuth ( ) {
@@ -491,148 +446,8 @@ export default{
     }
 }
 </script>
-<style >
+<style scoped>
 
 
-  .title {
-        position: absolute;
-        bottom:150px;
-         right:85% !important;
-         left:000%;
-        background-color: rgba(17, 13, 13, 0.87) !important;
-        color: rgb(11, 12, 12);
-        padding: 5px;
-        border-radius: 5px;
-        opacity: .75;
-    }
-     .loading {
-        position: absolute;
-        bottom:210px;
-         right:45%;
-         left:40%;
-       
-    }
-    .title1 {
-        position: absolute;
-        bottom:-9px !important;
-         right:00%  !important;
-         left:45% !important;
-         background-color: rgba(17, 13, 13, 0.87) !important;
-        color: rgb(11, 12, 12);
-      
-         opacity: .90;
-    }
-     .title2 {
-        position: absolute;
-        bottom:00px;
-        top:00px;
-         right:0%;
-         left:82%;
-        background-color: rgba(20, 19, 18, 0.938);
-        color: aliceblue;
-        padding: 0px;
-        border-radius: 5px;
-         opacity: .75;
-    }
-@media screen and (min-width: 601px) {
- 
-  h4.example {
-    height: 87px !important;
-    font-size: .9em !important;
-    overflow: hidden !important;
-  }
- 
-   h4.example1 {
-    height: 27px !important;
-    font-size: .9em !important;
-    overflow: hidden !important;
-  }
-    div.topbar1 {
-    height:22px !important;
-    overflow: hidden !important;
-  }
-     div.topbar2 {
-    height:42px !important;
-    overflow: hidden !important;
-  }
-   div.topbar2 {
-    height:40px !important;
-    overflow: hidden !important;
-  }
- span.button_text {
-    font-size: .57em !important;
-    font-style: oblique !important;
-  }
-   div.topbar {
-    height:19px !important;
-    overflow: hidden !important;
-  }
-  h4.example {
-    height: 17px !important;
-    font-size: .9em !important;
-    overflow: hidden !important;
-  }
-    h4.example1 {
-    height: 27px !important;
-    font-size: .9em !important;
-    overflow: hidden !important;
-  }
-  
 
-}
-
-@media screen and (max-width: 600px) {
-  div.topbar2 {
-    height:40px;
-    overflow: hidden;
-  }
-  v-card.mobilewWidth{
-    width: 400px
- 
-
-  }
-  div.topbar1 {
-    height:21px;
-    overflow: hidden;
-  }
-  h4.example {
-    height: 17px;
-    font-size: .9em;
-    overflow: hidden;
-  }
-   h4.example1 {
-    height: 27px;
-    font-size: .9em;
-    overflow: hidden;
-  }
-  p.example {
-    font-size: .8em;
-  }
-  p.example1 {
-    font-size: .2em;
-  }
-   p.exampledate {
-    font-size: .7em;
-  }
-  span.button_text {
-    font-size: .57em;
-    font-style: oblique;
-  }
-  div.mobile{
-    position:fixed;
-    top:8%;
-    width:100%;
-    z-index:100;
-  }
-  div.mobilefake{
-    height: 120px;
-    background: #fff !important;
-  }
-  p.mobilestick{
-    display: none !important;
-  }
-  div.mobilestick {
-     display: none !important;
-  }
-}
 </style>

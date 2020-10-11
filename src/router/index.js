@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../components/Home'
-import About from '../components/user/About'
 import Blog from '../components/user/Blog'
 import PotPlayerCreate from '../components/audio/PotPlayerCreate'
 import PotPlayer from '../components/audio/PotPlayer'
@@ -12,6 +11,11 @@ import EventDashbord from '../components/user/createEvent/EventDashbord'
 import SingelBlog from '../components/SingelBlog'
 import SingelEvent from '../components/user/createEvent/SingelEvent'
 import Signup from '../components/user/Auth/Signup'
+import Report from '../components/shared/Report'
+import Profile from '../components/Profile'
+import Favourite from '../components/Favourite'
+
+
 
 
 Vue.use(VueRouter)
@@ -24,9 +28,14 @@ Vue.use(VueRouter)
 
   },
   {
-      path: '/about',
-      name: 'About',
-      component:About},
+      path: '/favourite',
+      name: 'Favourite',
+      component:Favourite},
+      {
+        path: '/profile',
+        name: 'Profile',
+        props:true,
+        component:Profile},
       {
         path: '/blog/new',
         name: 'WriteBlog',
@@ -81,6 +90,11 @@ Vue.use(VueRouter)
           name: 'Signup',
           component: Signup
         },
+        {
+          path: '/report',
+          name: 'Report',
+          component: Report
+        }
        
         
 

@@ -11,8 +11,24 @@ import AlertCmp from './components/shared/Alert.vue';
 import DatetimePicker from 'vuetify-datetime-picker'
 import VueCountdownTimer from 'vuejs-countdown-timer'
 import Signup from './components/user/Auth/Signup'
+import Signin from './components/user/Auth/Signin'
+import EditMeetupDetails from './components/Edit/EditMeetupDetails.vue'
+import EditComment from './components/Edit/EditComment.vue'
+import EditReplay from './components/Edit/EditReplay.vue'
+import DeleteReplay from './components/Edit/DeleteReplay.vue'
+import DeleteMeetUp from './components/Edit/DeleteMeetUp.vue'
+import DeleteComment from './components/Edit/DeleteComment.vue'
+import CloseComment from './components/Edit/CloseComment.vue'
+import OpenComments from './components/Edit/OpenComments.vue'
+
+
 import DateFilter from './filters/date'
 import Aplayer from 'vue-aplayer'
+import VueSocialSharing from 'vue-social-sharing'
+import NotificationAll from './components/Notification/NotificationAll'
+import Share  from  './components/shared/Share'
+ 
+ 
 
 
 Vue.filter('date', DateFilter)
@@ -20,13 +36,27 @@ Vue.component ('app-alert', AlertCmp)
 Vue.config.productionTip = false
 Vue.use(DatetimePicker)
 Vue.use(VueCountdownTimer)
+Vue.component ('edit-meetup', EditMeetupDetails)
+Vue.component ('delete-meetup', DeleteMeetUp)
+Vue.component ('delete-comment', DeleteComment)
+Vue.component ('edit-comment', EditComment)
+Vue.component ('delete-replay', DeleteReplay)
+Vue.component ('edit-replay', EditReplay)
+Vue.component ('notification', NotificationAll)
+Vue.component ('close-comment', CloseComment)
+Vue.component ('open-comment', OpenComments)
 
+Vue.component ('share',Share )
+
+Vue.use(VueSocialSharing);
 
 
 Vue.component ('blog', Blog)
 Vue.component ('event', Event)
 Vue.component('aplayer', Aplayer)
 Vue.component ('signup', Signup)
+Vue.component ('signin', Signin)
+
 
 
 new Vue({
@@ -50,9 +80,11 @@ new Vue({
         this.$store.dispatch('autoSignIn', user)
         this.$store.dispatch('loadComments')
         this.$store.dispatch('loadReplays')
+        this.$store.dispatch('loadSave')
       }
     })
     
     this.$store.dispatch('loadMeetUps')
+    this.$store.dispatch('loadTimeNot')
   }
 }).$mount('#app')

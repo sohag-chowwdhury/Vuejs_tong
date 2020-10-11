@@ -26,10 +26,34 @@ export default new Vuex.Store({
     time: '',
     subject: '',
     type:'',
+    creatorImage:'',
+    creatorName:'',
     audience:''},
 ],
+lodeSave: [
+  {
+   id: '',
+   imageUrl: '',
+   title: '',
+   date:'',
+  location:'',
+  description:'',                                                             
+  audioUrl:'',
+  sub_title:'',
+  artist: '',
+  creatorId:'',
+  topic:'',
+  sub_sub_topics_value: '',                                            
+  time: '',
+  subject: '',
+  type:'',
+  creatorImage:'',
+  creatorName:'',
+  audience:''
+},
+],
 loadComments: [
-      {
+      {       id:'',
               description: '',
               date:'',
               creatorImageUrl:'',
@@ -43,14 +67,19 @@ loadComments: [
     ],
     loadReplays: [
       {
+              id:'',
               description: '',
               date:'',
               creatorImageUrl:'',
               creatorName:'',
               creatorId: '',
-              status: '',
+              commentsId: '',
               unique:''
       }
+    ],
+    loadTimeNot:[
+     { time:'',
+      notificationId:''}
     ],
     loading: false,
     user:null,
@@ -63,6 +92,13 @@ loadComments: [
     createMeetup (state, payload) {
       state.lodeMeetUps.push(payload)
   },
+  createSave (state, payload) {
+    state.lodeSave.push(payload)
+  },
+  setSave (state, payload) {
+    state.lodeSave = payload
+  },
+ 
   setLoadePots (state, payload) {
     state.lodePots = payload
   },
@@ -72,12 +108,21 @@ loadComments: [
   setComments (state, payload) {
     state.loadComments = payload
   },
+
+  createNotTime (state, payload) {
+    state.loadNotificationTime.push(payload)
+  },
+  setNotTime (state, payload) {
+    state.loadTimeNot = payload
+  },
   setReplays  (state, payload) {
     state.loadReplays = payload
   },
   createReply (state, payload) {
     state.loadReplays.push(payload)
   },
+
+ 
   createPot (state, payload) {
     state.lodePots.push(payload)
 },
@@ -101,7 +146,7 @@ loadComments: [
 },
   },
   actions: {
-
+    //for comments section
     loadComments ({commit}) {
       commit('setLoading', true)
       firebase.database().ref('comments').once('value')
@@ -110,7 +155,7 @@ loadComments: [
           const obj = data.val()
           for (let key in obj) {
             comments.push({
-
+              id:key,
               description: obj[key].description,
               date: obj[key].date,
               creatorImageUrl:obj[key].creatorImageUrl,
@@ -132,6 +177,30 @@ loadComments: [
           }
         )
     },
+
+    loadTimeNot ({commit}) {
+      firebase.database().ref('timeNot').once('value')
+        .then((data) => {
+          const timeNot = []
+          const obj = data.val()
+          for (let key in obj) {
+            timeNot.push({             
+              time: obj[key].date,                      
+              notificationId:obj[key].notificationId,
+                             
+                })
+          }
+          commit('setNotTime', timeNot)
+         commit('setLoading', false)
+        })
+        .catch(
+          (error) => {
+            console.log(error)
+            commit('setLoading', false)
+          }
+        )
+    },
+    //replay section
     loadReplays ({commit}) {
       commit('setLoading', true)
       firebase.database().ref('replays').once('value')
@@ -140,6 +209,7 @@ loadComments: [
           const obj = data.val()
           for (let key in obj) {
             replays.push({
+              id:key,
               description: obj[key].description,
               date: obj[key].date,
               creatorImageUrl:obj[key].creatorImageUrl,
@@ -181,7 +251,9 @@ loadComments: [
                   sub_sub_topics_value: obj[key].sub_sub_topics_value,                                            
                   time: obj[key].time,
                   subject: obj[key].subject,
-                  audience: obj[key].audience,    
+                  audience: obj[key].audience,  
+                  creatorImage: obj[key].creatorImage,
+                  creatorName: obj[key].creatorName,
                   type:  obj[key].type          
                 })
           }
@@ -195,7 +267,45 @@ loadComments: [
           }
         )
     },
-    createPot ({commit}, payload) {
+    loadSave ({commit}) {
+      commit('setLoading', true)
+      firebase.database().ref('save').once('value')
+        .then((data) => {
+          const saveData = []
+          const obj = data.val()
+          for (let key in obj) {
+            saveData.push({
+                  id: obj[key].postId,
+                  title: obj[key].title,
+                  description: obj[key].description,
+                  imageUrl: obj[key].imageUrl,
+                  location: obj[key].location,                                                                
+                  audioUrl: obj[key].audioUrl,
+                  date: obj[key].date,
+                  sub_title: obj[key].sub_title,
+                  artist: obj[key].artist,
+                  creatorId: obj[key].creatorId,
+                  topic:obj[key].topic,
+                  sub_sub_topics_value: obj[key].sub_sub_topics_value,                                            
+                  time: obj[key].time,
+                  subject: obj[key].subject,
+                  audience: obj[key].audience,  
+                  creatorImage: obj[key].creatorImage,
+                  creatorName: obj[key].creatorName,
+                  type:  obj[key].type          
+                })
+          }
+          commit('setSave', saveData)
+         commit('setLoading', false)
+        })
+        .catch(
+          (error) => {
+            console.log(error)
+            commit('setLoading', false)
+          }
+        )
+    },
+    createPot ({commit,getters}, payload) {
       const pot = {
         title: payload.title,
         description: payload.description,
@@ -206,7 +316,10 @@ loadComments: [
         sub_sub_topics_value:payload.sub_sub_topics_value,
         artist:payload.artist, 
         type:"Pot",  
-        creatorId: "dgfjkdshfkdsh"
+        creatorId: getters.user.id,
+        creatorImage: getters.user.photoUrl,
+        creatorName: getters.user.name,
+
       }
       let audioUrl
       let key
@@ -258,14 +371,16 @@ loadComments: [
         
     },
   
-    createMeetup ({commit}, payload) {
+    createMeetup ({commit,getters}, payload) {
       const meetup = {
           title: payload.title,
           location: payload.location,
           description: payload.description,
           date: payload.date.toISOString(),
           type: "Job",
-          creatorId: "dgfjkdshfkdsh"
+          creatorId: getters.user.id,
+          creatorImage: getters.user.photoUrl,
+          creatorName: getters.user.name,
         }
         let imageUrl
         let key
@@ -297,15 +412,17 @@ loadComments: [
           })
   },
 
-    createBlog ({commit}, payload) {
+    createBlog ({commit,getters}, payload) {
       const blog = {
         title: payload.title,
         description: payload.description,
         time:payload.time ,
         subject:payload.subject,
         audience: payload.audience,
-          creatorId:'sdkjbfkdsjhfvjkdsv',
-          type: "Blog"
+        creatorId: getters.user.id,
+          type: "Blog",
+          creatorImage: getters.user.photoUrl,
+          creatorName: getters.user.name,
         }
         let imageUrl
         let key
@@ -336,7 +453,67 @@ loadComments: [
             console.log(error)
           })
   },
-  //comment section
+  updateMeetupData ({commit}, payload) {
+    commit('setLoading', true)
+    const updateObj = {}
+    if (payload.title) {
+      updateObj.title = payload.title
+    }
+    if (payload.description) {
+      updateObj.description = payload.description
+    }
+    if (payload.artist) {
+      updateObj.date = payload.artist
+    }
+    if (payload.location) {
+      updateObj.date = payload.location
+    }
+    firebase.database().ref('meetups').child(payload.id).update(updateObj)
+      .then(() => {
+        commit('setLoading', false)
+        commit('updateMeetup', payload)
+        
+      })
+      .catch(error => {
+        console.log(error)
+        commit('setLoading', false)
+      })
+  },
+  //delete for meetup
+  deleteMeetup( {commit} ,payload) {
+    var adaRef = firebase.database().ref("meetups/" + payload.id);
+    adaRef.remove()
+      .then(() => {
+        commit('setLoading', false)
+      })
+      .catch(function(error) {
+        console.log("Remove failed: " + error.message)
+      });
+},
+ //comment section
+ deleteComment( {commit} ,payload) {
+   console.log("ok comments")
+  var adaRef = firebase.database().ref("comments/" + payload.id);
+  adaRef.remove()
+    .then(() => {
+      commit('setLoading', false)
+    })
+    .catch(function(error) {
+      console.log("Remove failed: " + error.message)
+    });
+},
+ 
+deleteReplay( {commit} ,payload) {
+  console.log("ok comments")
+ var adaRef = firebase.database().ref("replays/" + payload.id);
+ adaRef.remove()
+   .then(() => {
+     commit('setLoading', false)
+   })
+   .catch(function(error) {
+     console.log("Remove failed: " + error.message)
+   });
+},
   createComment ({commit,getters}, payload) {
     const comment = {
       
@@ -360,6 +537,84 @@ loadComments: [
           console.log(error)
         })
 },
+
+updateComment ({commit}, payload) {
+  commit('setLoading', true)
+  const updateObj = {}
+  if (payload.chatRoomName) {
+    updateObj.chatRoomName = payload.chatRoomName
+  }
+  if (payload.description) {
+    updateObj.description = payload.description
+  }
+ 
+  firebase.database().ref('comments').child(payload.id).update(updateObj)
+    .then(() => {
+      commit('setLoading', false)
+      commit('updateComment', payload)
+      
+    })
+    .catch(error => {
+      console.log(error)
+      commit('setLoading', false)
+    })
+},
+closeComment ({commit}, payload) {
+  commit('setLoading', true)
+  const updateObj = {}
+ 
+  if (payload.status) {
+    updateObj.status = payload.status
+  }
+ 
+  firebase.database().ref('comments').child(payload.id).update(updateObj)
+    .then(() => {
+      commit('setLoading', false)
+      commit('updateComment', payload)
+      
+    })
+    .catch(error => {
+      console.log(error)
+      commit('setLoading', false)
+    })
+},
+openComment ({commit}, payload) {
+  commit('setLoading', true)
+  const updateObj = {}
+ 
+  if (payload.status) {
+    updateObj.status = payload.status
+  }
+ 
+  firebase.database().ref('comments').child(payload.id).update(updateObj)
+    .then(() => {
+      commit('setLoading', false)
+   
+      
+    })
+    .catch(error => {
+      console.log(error)
+      commit('setLoading', false)
+    })
+},
+updateReplay ({commit}, payload) {
+  commit('setLoading', true)
+  const updateObj = {}
+ 
+  if (payload.description) {
+    updateObj.description = payload.description
+  }
+ 
+  firebase.database().ref('replays').child(payload.id).update(updateObj)
+    .then(() => {
+      commit('setLoading', false)
+      
+    })
+    .catch(error => {
+      console.log(error)
+      commit('setLoading', false)
+    })
+},
 createReply ({commit,getters}, payload) {
   const reply = {
     
@@ -367,7 +622,7 @@ createReply ({commit,getters}, payload) {
     date: new Date().toLocaleString(),
     creatorImageUrl:payload.creatorImageUrl,
     creatorName:getters.user.name,
-    commentsId:payload.commentsRId,
+    commentsId:payload.commentsId,
     creatorId: getters.user.id,
     unique:payload.unique
     }
@@ -381,7 +636,121 @@ createReply ({commit,getters}, payload) {
         console.log(error)
       })
 },
-  asyncsignUserUp ({commit}, payload) {
+//report section 
+createReport ({getters}, payload) {
+  const report = {
+    
+    description: payload.description,
+    date: new Date().toLocaleString(),
+    topics:payload.topics,
+    sub_topics:payload.sub_topics,
+    creatorId: getters.user.id,
+    
+   
+  
+    }
+    firebase.database().ref('report').push(report)
+      .then(() => {
+       alert("Report done ")
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+},
+//timeNot
+timeSetNot ({getters}, payload) {
+  const timefornot = {
+        time:payload.time,
+        notificationId:getters.user.id
+    }
+    firebase.database().ref('timeNot').push(timefornot).catch((error) => {
+        console.log(error)
+      })
+},
+
+  //save Data
+
+     saveBlog ({commit,getters}, payload) {
+    const save = {
+      postId:payload.id,
+      title: payload.title,
+      description: payload.description,
+      time:payload.time ,
+      subject:payload.subject,
+      audience: payload.audience,
+      creatorId:payload.creatorId,
+      type: "Blog",
+      imageUrl:payload.imageUrl,
+      userFav: getters.user.id,
+      creatorImage: payload.creatorImage,
+     
+
+      }
+      firebase.database().ref('save').push(save)
+      .then(() => {
+        commit('createSave', {
+          ...save,
+        })
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+},
+saveJob ({commit,getters}, payload) {
+  const save = {
+    postId:payload.id,
+    title: payload.title,
+    description: payload.description,
+    date:payload.date ,
+    creatorId:payload.creatorId,
+    type: "Job",
+    imageUrl:payload.imageUrl,
+    userFav: getters.user.id,
+    creatorImage: payload.creatorImage,
+    creatorName: payload.creatorName,
+    location: payload.location,
+
+    }
+    firebase.database().ref('save').push(save)
+    .then(() => {
+      commit('createSave', {
+        ...save,
+      })
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+},
+savePot ({commit,getters}, payload) {
+  const save = {
+    postId:payload.id,
+    title: payload.title,
+    description: payload.description,
+    date:payload.date ,
+    subject:payload.topic,
+    audience: payload.audience,
+    creatorId:payload.creatorId,
+    type: "Pot",
+    imageUrl:payload.imageUrl,
+    userFav: getters.user.id,
+    creatorImage: getters.user.photoUrl,
+    creatorName: getters.user.name,
+    audioUrl:payload.audioUrl,
+
+    }
+    firebase.database().ref('save').push(save)
+    .then(() => {
+      commit('createSave', {
+        ...save,
+      })
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+},
+
+
+  async signUserUp ({commit}, payload) {
     commit('setLoading', true)
     commit('clearError')
     firebase.auth().createUserWithEmailAndPassword(payload.email, payload.password)
@@ -405,7 +774,7 @@ createReply ({commit,getters}, payload) {
       )
   },
     
-async signUpWithGoogle({commit}) {
+ signUpWithGoogle({commit}) {
   commit('setLoading', true)
   commit('clearError')
   const provider = new firebase.auth.GoogleAuthProvider()
@@ -498,6 +867,23 @@ lodeMeetUps (state) {
   })
 },
 
+loadTimeNot (state) {
+  return state.loadTimeNot.sort((timeA, timeB) =>{
+    return new Date(timeB.date ) - new Date(timeA.date);
+
+  })
+},
+
+loadSave (state) {
+  return state.lodeSave.sort((meetUpA, meetUpB) =>{
+    return new Date(meetUpB.date ) - new Date(meetUpA.date);
+
+  })
+},
+  notificationTime (state,getters) {
+  return getters.loadTimeNot.slice(0,1)
+},
+
 loadComments (state) {
   return state.loadComments.sort((commentsA, commentB) =>{
     return new Date(commentB.date ) - new Date(commentsA.date);
@@ -514,7 +900,7 @@ loadReplays (state) {
 lodeMeetUp (state) {
     return (meetupId)=>{
         return state.lodeMeetUps.find((meetup)=>{
-            return meetup.id === meetupId
+            return meetup.id === meetupId 
         })
     }
 },

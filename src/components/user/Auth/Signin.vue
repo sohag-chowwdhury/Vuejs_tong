@@ -1,41 +1,34 @@
-
 <template>
   <v-row>
     <v-dialog  v-model="EditDialog"  persistent max-width="600px">
       <template v-slot:activator="{ on }">   
           <v-btn v-on="on" text small>
-               <v-icon color="" class="mx-2">mdi-account-circle</v-icon>SignUp
+               <v-icon color="" class="mx-2">
+                   mdi-account-key</v-icon>Sign In
           </v-btn>
       </template>
-       <v-container >
-        <v-card class="mx-2" xs12 sm6 >
-            <v-layout >
+       <v-container>
+        <v-card class="mx-2"  xs12 sm6 offset-sm3>
+             <v-layout >
                 <v-flex text-right class="mx-2">  
                 <v-btn depressed  class="mx-2" color="" @click="EditDialog = false">
                     <v-icon>mdi-close-circle</v-icon>
                 </v-btn>
             </v-flex> 
             </v-layout> 
-        <v-layout row  class="mx-3" >
-             <v-flex justify-center text-center class="red--text my-3">
-                <h3>Create Account</h3>
+        <v-layout row class="mx-3">
+            <v-flex xs12 offset-sm3 class="red--text my-3">
+                <h3>Sign In Your Account</h3>
             </v-flex>
         </v-layout>
-        <v-layout row justify-center v-if="error">
-          
+        <v-layout row v-if="error">
+            <v-flex xs12 offset-sm3 >
+               <app-alert @dismissed="onDismissed" :text="error.message"></app-alert>
+            </v-flex>
         </v-layout>
          <v-form class="mx-3"  @submit.prevent="onSignIn">
-             <v-layout row justify-center>
-                  <v-flex xs12 sm6  class="mx-2">
-                    <v-text-field
-                    name="name"
-                    label="Full Name"
-                    id="name"
-                    v-model="fullName"
-                    required >      
-                     </v-text-field>
-                 </v-flex>
-                <v-flex xs12 sm6  class="mx-2">
+             <v-layout row justify-center="">
+                <v-flex xs12 sm6 text-center class="mx-2">
                     <v-text-field
                     name="email"
                     label="Email"
@@ -44,7 +37,7 @@
                     required >      
                      </v-text-field>
                  </v-flex>
-                 <v-flex xs12 sm6  class="mx-2">
+                 <v-flex xs12 sm6 offset-sm3 class="mx-2">
                     <v-text-field
                     name="password"
                     label="Password"
@@ -53,31 +46,21 @@
                     required >      
                      </v-text-field>
                  </v-flex>
-                 <v-flex xs12 sm6 class="mx-2">
-                    <v-text-field
-                    name="confarmPassword"
-                    label="Confarm Password"
-                    id="confarmPassword"
-                    v-model="confarmPassword"
-                    :rules="[passwordMatch]"
-                    required >      
-                     </v-text-field>
-                 </v-flex>
             </v-layout >
-            <v-layout row justify-center>
-            <v-flex xs12 sm6  text-center>
+            <v-layout  row justify-center>
+            <v-flex xs12 sm6 text-center>
               <v-btn
                 depressed
                 type="submit"
-                class="my-2 mx-11 "
-                @click="onSignup"
+                class="my-2"
+                
                 color="info"
                 :loading="loading"
                 :disabled="!formValidation"
                 >Sign In</v-btn>
             </v-flex>
           </v-layout>
-          <v-layout  row justify-center>
+           <v-layout  row justify-center>
             <v-flex xs12 sm6 text-center>
                <h4 class="text-center">Or</h4>
               <v-btn
@@ -85,21 +68,27 @@
                 
                 type="submit"
                 class="my-2"
-                @click="signInWithGoogle"
+                @click="signInWithGoogleIn"
                 color="error"
                 :loading="loading"
                 > <v-icon class="mx-4 my-2">mdi-google-plus</v-icon> Sign Up With Google</v-btn>
                  <v-btn
                 depressed
                 dark
-                @click="signInWithFacebook"
+                @click="signInWithFacebookIn"
                 type="submit"
                 class="my-2"
                 color="blue darken-3"
                 :loading="loading"
                 > <v-icon class="mx-2">mdi-facebook</v-icon> Sign Up With Facebook</v-btn>
             </v-flex>
+            
           </v-layout>
+          <v-layout row wrap justify-center>
+                 <v-flex xs12 md12 lg8 class="mx-2 mt-5" >
+              <p> if you have not an account please <v-btn x-small color="green"> <signup></signup></v-btn> </p>
+             </v-flex>
+            </v-layout>
        </v-form>
        </v-card>
     </v-container>
@@ -112,27 +101,21 @@
          return {
             EditDialog: false,
              email: '',
-               fullName: '',
-             password: '',
-            confarmPassword: '',
+             password: ''
              
          }
      },
      computed: {
-          formValidation () {
+         formValidation () {
              return this.email !== '' &&
               this.password !== '' &&
-             this.confarmPassword !== '' &&
-              this.fullName !== ''
+             this.confarmPassword !== ''
             
-         },
-          passwordMatch () {
-             return this.password != this.confarmPassword ? " Password Not Match" : ''
          },
          user() {
              return this.$store.getters.user
          },
-         error () {
+          error () {
              return this.$store.getters.error
          },
          loading () {
@@ -147,26 +130,26 @@
              }
          },
       methods: {
-           onSignup () {
-                this.EditDialog = false
-            this.$store.dispatch('signUserUp', {email: this.email, password: this.password, fullName:this.fullName})
+         onSignIn () {
+            this.EditDialog = false
+            this.$store.dispatch('signUserIn', {email: this.email, password: this.password})
 
          },
-         signInWithGoogle () {
+           signInWithGoogleIn () {
                 this.EditDialog = false
             this.$store.dispatch('signInWithGoogle') 
          },
-         signInWithFacebook () {
+         signInWithFacebookIn () {
                 this.EditDialog = false
             this.$store.dispatch('signInWithFacebook')
-         
+            this.$router.push('/profile')
+    
          },
-         onDismissed () {
+          onDismissed () {
              console.log('Dismissed alert')
              this.$store.dispatch('clearError')
-             
-            
-         }
          }
      }
+     
+ }
 </script>
